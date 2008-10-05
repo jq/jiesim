@@ -11,7 +11,7 @@ import webdb.Util;
 
 
 public class Update extends Event{
-	static String path = "../../update";
+	static String path = "../../src/update";
 	static String origPath = "../../Upd68810days";
     Data d;
     Update (Date date, Data d_) {
