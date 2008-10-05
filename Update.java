@@ -11,8 +11,8 @@ import webdb.Util;
 
 
 public class Update extends Event{
-	static String path = "/Volumes/src/jxu/sim/update";
-	static String origPath = "/Volumes/src/jxu/sim/Upd68810days";
+	static String path = "../../update";
+	static String origPath = "../../Upd68810days";
     Data d;
     Update (Date date, Data d_) {
     	timestamp = date;
@@ -34,7 +34,7 @@ public class Update extends Event{
 				    	u.add(update);
 
 		            }
-		            
+
                 }
                 line = reader.readLine();
 	        }
