@@ -54,7 +54,6 @@ class UserProfileGenerator {
             	
             	try                                                                                                                         
                 { 
-	            	//SAMPLE LINE: class1  1-4     $20-30  100-200 -10%    $10-15  0-4     -0%	1000
             		//NEW CONFIG:  RAN	100-100	13334	0-119999	$5-5	100-100  -0%	$5-5	1-1	-0%	
 
             		line_tokenizer = new StringTokenizer (line);

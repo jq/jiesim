@@ -1,8 +1,7 @@
 
 public class User {
-	static int UserNumber = 10;
-    static int budget = 100;
-    int leftBudget = budget;
+	static int UserNumber;
+    String config = "userConfig.txt";
     static User[] getUsers() {
 		User[] u = new User[User.UserNumber];
 		for (int i = 0; i<UserNumber; ++i) {
@@ -13,4 +12,6 @@ public class User {
     public int pay(int responseTime, float dataFresh) {
     	return 0;
     }
+    
+    
 }
