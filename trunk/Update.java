@@ -12,6 +12,7 @@ import webdb.Util;
 
 public class Update extends Event{
 	static String path = "update";
+	//static String path = "../../src/update";
 	static String origPath = "../../Upd68810days";
 	// Ms
 	static int updateTime = 1000;
@@ -30,7 +31,8 @@ public class Update extends Event{
 
     static void getUpdate(Data[] d, List<Event> u) {
     	try {
-	        java.io.BufferedReader reader = new  java.io.BufferedReader (new java.io.InputStreamReader (new java.io.FileInputStream (path)));
+	        java.io.BufferedReader reader = new  java.io.BufferedReader (
+	        new java.io.InputStreamReader (new java.io.FileInputStream (path)));
 	        String line = reader.readLine ();
 	        while (line != null) {
                 java.util.StringTokenizer st = new java.util.StringTokenizer (line, "|");
