@@ -11,12 +11,21 @@ import webdb.Util;
 
 
 public class Update extends Event{
-	static String path = "../../src/update";
+	static String path = "update";
 	static String origPath = "../../Upd68810days";
+	// Ms
+	static int updateTime = 1000;
     Data d;
-    Update (Date date, Data d_) {
-    	timestamp = date;
+    Server s;
+    Update (Long time, Data d_) {
+    	timestamp = time;
     	d = d_;
+    }
+
+    Update (Long time, Data d_, Server s_) {
+    	timestamp = time;
+    	d = d_;
+    	s = s_;
     }
 
     static void getUpdate(Data[] d, List<Event> u) {
@@ -30,9 +39,11 @@ public class Update extends Event{
                 while (st.hasMoreTokens()) {
 		            Date t = Util.toDate (st.nextToken ());
 		            if (t != null) {
-				    	Update update = new Update(t, data);
+				    	Update update = new Update(t.getTime(), data);
+				        Update cacheUpdate = new Update(t.getTime() + updateTime,
+				        		data, data.getRandomCacheServer());
 				    	u.add(update);
-
+				    	u.add(cacheUpdate);
 		            }
 
                 }

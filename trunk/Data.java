@@ -7,11 +7,18 @@ public class Data {
 	static int updateNum = 1;
 	static int cacheNum = 4;
     Server src;
+    int seed = 0;
     LinkedList<Server> fresh = new LinkedList<Server>();
     LinkedList<Server> stale = new LinkedList<Server>();
     Data(Server s) {
     	src = s;
     }
+
+    public Server getRandomCacheServer() {
+    	seed++;
+    	return stale.get(seed % stale.size());
+    }
+
     static Data[] getDatas(Server[] s) {
         Data[] d = new Data[dataNum];
         int serverSize = s.length;
