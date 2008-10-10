@@ -3,12 +3,12 @@ import java.util.Date;
 
 
 public class Event implements Comparator{
-    Date timestamp;
+    Long timestamp;
 
 	public int compare(Object o1, Object o2) {
 		// TODO Auto-generated method stub
-		Date t1 = (Date) o1;
-		Date t2 = (Date) o2;
+		Long t1 = (Long) o1;
+		Long t2 = (Long) o2;
 
 		return t1.compareTo(t2) ;
 	}
