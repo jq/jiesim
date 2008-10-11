@@ -18,17 +18,15 @@ public class sim {
         return list;
 
     }
-    static String asPath = "/Volumes/src/jxu/sim/src/as";
+
 	@SuppressWarnings("unchecked")
+
 	public static void main(String[] args) {
+    	String asPath = "/Volumes/src/jxu/sim/src/as";
+        //for
 		// Server
 		int serverSize = 10;
 		Server[] s = Server.getServers(serverSize);
-		// Data &
-		Data[] d = Data.getDatas(s);
-		// update
-    	ArrayList<Event> e = new ArrayList<Event>(10000);
-    	Update.getUpdate(d, e);
 		// User
 
 		// Access
@@ -36,14 +34,23 @@ public class sim {
         for (int i = 0; i < asFiles.length; ++i) {
         	java.io.File one = new java.io.File(asFiles[i]);
         	if (one.isFile()) {
+        		// Data can't be cloned, since data's location changed during running
+        		Data[] d = Data.getDatas(s);
+        		// update
+            	ArrayList<Event> e = new ArrayList<Event>(40000);
+            	Update.getUpdate(d, e);
         		// avoid the .svn folder
         		// read access from disk
-        		ArrayList<Event> clone = (ArrayList<Event>)e.clone();
-        		Access.getAccess(d, clone, asFiles[i]);
-        		Collections.sort(clone);
+            	ArrayList<Access> a = new ArrayList<Access>(20000);
+        		Access.getAccess(d, a, asFiles[i]);
+
+
+        		e.addAll(a);
+        		Collections.sort(e);
 
         		//User[] u = User.getUsers();
-                //Cache c = new Cache(50);
+                Cache c = new Cache();
+                c.init(50, e, d, s);
         	}
         }
 	}

@@ -33,7 +33,7 @@ public class Access extends Event {
      * @input: one access file in reorged format: queryID|data1,data2,...,datan|arrTime
      * @output: one access object
      */
-    static void getAccess(Data[] d, List<Event> a, String filename) {
+    static void getAccess(Data[] d, List<Access> a, String filename) {
     	try {
 	        java.io.BufferedReader reader = new  java.io.BufferedReader (
 	        new java.io.InputStreamReader (new java.io.FileInputStream (filename)));
