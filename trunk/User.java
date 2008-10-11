@@ -13,11 +13,11 @@ import java.util.ArrayList;
 
 public class User {
 	int userID;
-	// as long as user pay, if user budget run out, all query are not success
+	// as long as user pay, if user budget run out, all remaining queries do not success
     int successQuery;
     int totalQuery;
 
-    double budget;
+    double budget = 200;
     double cost;
 
     //QC spec
@@ -61,7 +61,7 @@ public class User {
 	 * @param: access, userprofile,
 	 * @return:
 	 */
-    public static void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){
+    public static ArrayList<User> addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){
 
     	Vector<Integer> usrid = new Vector<Integer>();
         Vector<Integer> usrlist = new Vector<Integer>();
@@ -101,6 +101,7 @@ public class User {
                 	 usrid.add(new Integer(usrID));
 
                 	 User u = new User(usrID, relDeadline, stale, maxQos, maxQod, minQos, minQod);
+                	 u.totalQuery = queryNum;
                 	 users.add(u);
                 	}
                 	for (int i=0; i<queryNum; i++){
@@ -163,6 +164,7 @@ public class User {
             	b.setLength(0);
             }
             out_p.close();
+            
 
         }
 
@@ -175,7 +177,8 @@ public class User {
             System.exit(0);
         }
 
-        //return usrNum;
+        return users;
+
     }
 
     public static void main(String[] args) throws IOException{
