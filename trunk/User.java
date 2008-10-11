@@ -15,12 +15,14 @@ public class User {
 	int userID;
     //QC spec
     int maxQos, maxQod, minQos, minQod, relDeadline;
-    double fresh;
+    double stale;
+    private double nslope_qos = maxQos/relDeadline;
+    private double nslope_qod = maxQod/stale;
 
 	User (int uid, int reld, double f, int qos, int qod, int nqos, int nqod){
 		userID = uid;
 		relDeadline = reld;
-		fresh = f;	
+		stale = f;	
 		maxQos = qos;
 		maxQod = qod;
 		minQos = nqos;
@@ -36,8 +38,24 @@ public class User {
         return u;
     }
     */
-    public int pay(int responseTime, float dataFresh) {
-    	return 0;
+    
+    public double getQos_linearPositive(int time){
+        if( time > relDeadline )
+            return 0;
+        else
+            return nslope_qos * (relDeadline - time);
+    }
+
+    public double getQod_linearPositive(double staleness){
+        
+    	if (staleness >= stale )
+            return 0.0;
+        else
+            return nslope_qod * (stale - staleness);
+    }
+
+    public double pay_linearPositive(int responseTime, float datastale) {
+    	return getQos_linearPositive(responseTime) + getQod_linearPositive(datastale);
     }
 
 	/*
@@ -53,7 +71,7 @@ public class User {
         int usrIndex = -1, usrPos = -1;
         int usrID, queryNum;
         int maxQos, minQos, relDeadline, maxQod, minQod;
-        double fresh;
+        double stale;
         ArrayList<User> users = new ArrayList();
 
         String line;
@@ -76,14 +94,14 @@ public class User {
 					relDeadline = Integer.parseInt(line_tokenizer.nextToken());
 					minQos = (int)( Double.parseDouble(line_tokenizer.nextToken()));
 					maxQod = Integer.parseInt(line_tokenizer.nextToken());
-					fresh = Double.parseDouble(line_tokenizer.nextToken());
+					stale = Double.parseDouble(line_tokenizer.nextToken());
 					minQod = (int)(Double.parseDouble(line_tokenizer.nextToken()));
 
 					//keep same index in usrid and prof
                 	if (usrid.indexOf(usrID)==-1){
                 	 usrid.add(new Integer(usrID));
 
-                	 User u = new User(usrID, relDeadline, fresh, maxQos, maxQod, minQos, minQod);
+                	 User u = new User(usrID, relDeadline, stale, maxQos, maxQod, minQos, minQod);
                 	 users.add(u);
                 	}
                 	for (int i=0; i<queryNum; i++){
@@ -126,7 +144,7 @@ public class User {
             StringBuilder b = new StringBuilder(1024);
             for (int i=0; i<total; i++){
             	a = inputAccess.get(i);
-            	//output format: queryID|data1,data2,...,datan|arrTime|userID|maxQos|relDeadline|maxQod|fresh
+            	//output format: queryID|data1,data2,...,datan|arrTime|userID|maxQos|relDeadline|maxQod|stale
             	b.append(a.queryID); b.append('|');
             	len = a.d.length;
             	b.append(a.d[0]);
@@ -140,7 +158,7 @@ public class User {
             	b.append(a.u.maxQos); b.append('|');
             	b.append(a.u.relDeadline); b.append('|');
             	b.append(a.u.maxQod); b.append('|');
-            	b.append(a.u.fresh); b.append('\n');
+            	b.append(a.u.stale); b.append('\n');
 
             	out_p.print (b.toString());
             	b.setLength(0);
