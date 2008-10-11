@@ -2,17 +2,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 
-public class Data {
+public class Data implements Comparable<Data>{
 	static final int dataNum = 688;
 	// when src updated, how many cache server will update at the same time
 	static int updateNum = 1;
-	static int cacheNum = 4;
+	static int cacheNum = 2;
     Server src;
     int seed = 0;
+    Long time;
     ArrayList<Server> fresh = new ArrayList<Server>(cacheNum);
     ArrayList<Server> stale = new ArrayList<Server>(cacheNum);
     Data(Server s) {
     	src = s;
+    	time = new Long(0);
     }
 
     public Server getRandomCacheServer() {
@@ -52,6 +54,11 @@ public class Data {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public int compareTo(Data arg0) {
+		// TODO Auto-generated method stub
+		return time.compareTo(arg0.time);
 	}
 
 }

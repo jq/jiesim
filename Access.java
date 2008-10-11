@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-
 import webdb.Util;
-
-
-
 
 public class Access extends Event {
 	static int accessNum = 100;
@@ -26,6 +22,12 @@ public class Access extends Event {
     	queryID = q;
     	timestamp = time;
     	d = d_;
+    }
+
+    public void run(Cache c) {
+		// try the combination
+		// if you get two data from one server, choose the longer time
+
     }
 
     /*
@@ -52,6 +54,7 @@ public class Access extends Event {
 	                }
 	                Date t = Util.toDate (st.nextToken ());
 		            if (t != null) {
+
 				    	Access access = new Access(qid, t.getTime(), data);
 				    	a.add(access);
 		            }

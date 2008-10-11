@@ -29,8 +29,11 @@ public class Update extends Event{
     	s = s_;
     }
 
-    public void run() {
+    public void run(Cache c) {
     	d.update(s);
+    	if (d.src == s) {
+    	    c.invalidate(d);
+    	}
     }
     static void getUpdate(Data[] d, List<Event> u) {
     	try {
