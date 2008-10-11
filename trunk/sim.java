@@ -29,7 +29,7 @@ public class sim {
 	public static void main(String[] args) throws IOException {
     	int cacheSize = 50;
     	String asFile = "/Volumes/src/jxu/sim/src/as/query20k-data688-10days-uniform.txt.as";
-    	String uFile = "";
+    	String uFile = "/Volumes/src/jxu/sim/src/userProfile.txt";
     	String oFile = "output";
         for (int i = 0; i<args.length; ++i) {
         	String s = args[i];
@@ -50,9 +50,7 @@ public class sim {
 		// Server
 		int serverSize = 10;
 		Server[] s = Server.getServers(serverSize);
-		// User
-		new UserProfileGenerator("userConfig.txt", "userProfile.txt");
-		
+
 		// Access
 		// Data can't be cloned, since data's location changed during running
 		Data[] d = Data.getDatas(s);
@@ -63,8 +61,8 @@ public class sim {
 		// read access from disk
     	ArrayList<Access> a = new ArrayList<Access>(20000);
 		Access.getAccess(d, a, asFile);
-		
-		User.addUser(a, "userProfile.txt", "query.txt");
+
+		User.addUser(a, uFile, "query.txt");
 
 		e.addAll(a);
 		Collections.sort(e);

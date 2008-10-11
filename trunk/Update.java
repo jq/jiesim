@@ -29,6 +29,9 @@ public class Update extends Event{
     	s = s_;
     }
 
+    public void run() {
+    	d.update(s);
+    }
     static void getUpdate(Data[] d, List<Event> u) {
     	try {
 	        java.io.BufferedReader reader = new  java.io.BufferedReader (
