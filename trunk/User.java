@@ -12,27 +12,49 @@ import java.util.ArrayList;
 
 
 public class User {
+	int userID;
+    //QC spec
+    int maxQos, maxQod, minQos, minQod, relDeadline;
+    double fresh;
+
+	User (int uid, int reld, double f, int qos, int qod, int nqos, int nqod){
+		userID = uid;
+		relDeadline = reld;
+		fresh = f;	
+		maxQos = qos;
+		maxQod = qod;
+		minQos = nqos;
+		minQod = nqod;
+	}
+
+    String config = "userConfig.txt";
+    /*static User[] getUsers() {
+		User[] u = new User[User.UserNumber];
+		for (int i = 0; i<UserNumber; ++i) {
+			u[i] = new User();
+		}
+        return u;
+    }
+    */
     public int pay(int responseTime, float dataFresh) {
     	return 0;
     }
-
 
 	/*
 	 * @param: access, userprofile,
 	 * @return:
 	 */
-    public void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){
-        Vector<Integer> usrid = new Vector<Integer>();
+    public static void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){                                                                                                
+
+    	Vector<Integer> usrid = new Vector<Integer>();
         Vector<Integer> usrlist = new Vector<Integer>();
         Random ran = new Random();
 
-        usrid.clear();
-        usrlist.clear();
-        int usrIndex = -1, usrNum = -1, usrPos = -1;
+        int usrIndex = -1, usrPos = -1;
         int usrID, queryNum;
         int maxQos, minQos, relDeadline, maxQod, minQod;
         double fresh;
-        ArrayList<Profile> prof = new ArrayList();
+        ArrayList<User> users = new ArrayList();
 
         String line;
         StringTokenizer line_tokenizer;
@@ -60,7 +82,9 @@ public class User {
 					//keep same index in usrid and prof
                 	if (usrid.indexOf(usrID)==-1){
                 	 usrid.add(new Integer(usrID));
-                	 prof.add(new Profile(relDeadline, fresh, maxQos, maxQod, minQos, minQod));
+
+                	 User u = new User(usrID, relDeadline, fresh, maxQos, maxQod, minQos, minQod);
+                	 users.add(u);
                 	}
                 	for (int i=0; i<queryNum; i++){
 						usrlist.add(new Integer(usrID));
@@ -79,26 +103,18 @@ public class User {
                 line = br_access.readLine();
             }
             br_access.close();
-            usrNum = usrid.size();
-            //System.out.println(usrlist.size());
 
             int total = inputAccess.size();
             Access a;
-            Profile p;
+            User u;
             for (int i=0; i<total; i++){
             	usrIndex = ran.nextInt(total-i);
             	usrID = (usrlist.get(usrIndex)).intValue();
             	usrPos = usrid.indexOf(usrID); //position in user id list, index of profile
 
-            	p = prof.get(usrPos);
+            	u = users.get(usrPos);
             	a = inputAccess.get(i);
-            	a.userID = usrID;
-            	a.maxQos = p.maxQos;
-            	a.maxQod = p.maxQod;
-            	a.minQos = p.minQos;
-            	a.minQod = p.minQod;
-            	a.fresh = p.fresh;
-            	a.relDeadline = p.relDeadline;
+            	a.u = u;
             	usrlist.remove(usrIndex);
             }
 
@@ -120,11 +136,11 @@ public class User {
             	}
             	b.append('|');
             	b.append(a.timestamp); b.append('|');
-            	b.append(a.userID); b.append('|');
-            	b.append(a.maxQos); b.append('|');
-            	b.append(a.relDeadline); b.append('|');
-            	b.append(a.maxQod); b.append('|');
-            	b.append(a.fresh); b.append('\n');
+            	b.append(a.u.userID); b.append('|');
+            	b.append(a.u.maxQos); b.append('|');
+            	b.append(a.u.relDeadline); b.append('|');
+            	b.append(a.u.maxQod); b.append('|');
+            	b.append(a.u.fresh); b.append('\n');
 
             	out_p.print (b.toString());
             	b.setLength(0);
@@ -152,27 +168,3 @@ public class User {
 
 }
 
-class Profile{
-
-	int usrId;
-	int maxQos;
-	int relDeadline;
-	int minQos;
-	int maxQod;
-	double fresh;
-	int minQod;
-
-	public Profile(int reld, double f, int qos, int qod, int nqos, int nqod){
-		relDeadline = reld;
-		fresh = f;
-		maxQos = qos;
-		maxQod = qod;
-		minQos = nqos;
-		minQod = nqod;
-	}
-	public String toString(){
-		//return relDeadline + "\t" + fresh + "\t" + maxQos + "\t" + maxQod + "\t" + minQos + "\t" + minQod;
-		return maxQos + "\t" + relDeadline + "\t" + maxQod + "\t" + fresh;
-	}
-
-}

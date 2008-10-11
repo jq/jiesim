@@ -17,10 +17,6 @@ public class Access extends Event {
     Data[] d;
     User u;
     int queryID;
-    int userID;
-    //QC spec
-    int maxQos, maxQod, minQos, minQod, relDeadline;
-    double fresh;
 
     static String pathPostfix = ".as";
 	//static String path = "../../src/update";
