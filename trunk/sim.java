@@ -1,3 +1,8 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,15 +26,14 @@ public class sim {
 
 	@SuppressWarnings("unchecked")
 // -c cache size -a access file -u user config file
-	public static void main(String[] args) {
-    	String asPath = "/Volumes/src/jxu/sim/src/as";
+	public static void main(String[] args) throws IOException {
     	int cacheSize = 50;
     	String asFile = "/Volumes/src/jxu/sim/src/as/query20k-data688-10days-uniform.txt.as";
-    	String uFile;
-    	String oFile;
+    	String uFile = "";
+    	String oFile = "output";
         for (int i = 0; i<args.length; ++i) {
         	String s = args[i];
-        	if (s == "-c") {
+        	if (s.compareTo("-c") == 0) {
         		++i;
         		cacheSize = Integer.parseInt(args[i]);
         	} else if (s.compareTo("-u") == 0) {
@@ -38,7 +42,7 @@ public class sim {
         	} else if (s.compareTo("-a") == 0) {
         		++i;
         		asFile = args[i];
-        	} else if (s == "-o") {
+        	} else if (s.compareTo("-o") == 0) {
         		++i;
         		oFile = args[i];
         	}
@@ -67,8 +71,11 @@ public class sim {
 		Collections.sort(e);
 
 		//User[] u = User.getUsers();
+		Writer output = new BufferedWriter(new FileWriter(new File(oFile)));
+
         Cache c = new Cache();
-        c.init(cacheSize, e, d, s);
+        c.init(cacheSize, e, d, s, output);
+        c.run();
 	}
 
 }

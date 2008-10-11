@@ -1,3 +1,4 @@
+import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +13,14 @@ public class Cache {
     Server[] s;
     // cached data
     Set<Data> c;
+    Writer o;
 
-	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_) {
+	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_, Writer output) {
 		size = size_;
 		e = e_;
 		d = d_;
 		s = s_;
+		o = output;
 	}
 
     public void run() {
@@ -31,7 +34,7 @@ public class Cache {
 
 			}
 		}
-
+        result();
     }
 
 	private void run(Access a) {
@@ -42,7 +45,7 @@ public class Cache {
 
 	}
 
-	public void result(String file) {
+	public void result() {
 
 	}
 }
