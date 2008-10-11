@@ -64,8 +64,7 @@ public class sim {
     	ArrayList<Access> a = new ArrayList<Access>(20000);
 		Access.getAccess(d, a, asFile);
 		
-		User u = new User();
-		u.addUser(a, "userProfile.txt", "query.txt");
+		User.addUser(a, "userProfile.txt", "query.txt");
 
 		e.addAll(a);
 		Collections.sort(e);
