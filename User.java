@@ -13,6 +13,13 @@ import java.util.ArrayList;
 
 public class User {
 	int userID;
+	// as long as user pay, if user budget run out, all query are not success
+    int successQuery;
+    int totalQuery;
+
+    double budget;
+    double cost;
+
     //QC spec
     int maxQos, maxQod, minQos, minQod, relDeadline;
     double stale;
@@ -22,7 +29,7 @@ public class User {
 	User (int uid, int reld, double f, int qos, int qod, int nqos, int nqod){
 		userID = uid;
 		relDeadline = reld;
-		stale = f;	
+		stale = f;
 		maxQos = qos;
 		maxQod = qod;
 		minQos = nqos;
@@ -30,15 +37,7 @@ public class User {
 	}
 
     String config = "userConfig.txt";
-    /*static User[] getUsers() {
-		User[] u = new User[User.UserNumber];
-		for (int i = 0; i<UserNumber; ++i) {
-			u[i] = new User();
-		}
-        return u;
-    }
-    */
-    
+
     public double getQos_linearPositive(int time){
         if( time > relDeadline )
             return 0;
@@ -47,7 +46,7 @@ public class User {
     }
 
     public double getQod_linearPositive(double staleness){
-        
+
     	if (staleness >= stale )
             return 0.0;
         else
@@ -62,7 +61,7 @@ public class User {
 	 * @param: access, userprofile,
 	 * @return:
 	 */
-    public static void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){                                                                                                
+    public static void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){
 
     	Vector<Integer> usrid = new Vector<Integer>();
         Vector<Integer> usrlist = new Vector<Integer>();
@@ -182,6 +181,9 @@ public class User {
     public static void main(String[] args) throws IOException{
 		//new UserProfileGenerator("userConfig.txt", "userProfile.txt");
 		//AddUser(a, "userProfile.txt", "query.txt");
+		// User
+		new UserProfileGenerator("userConfig.txt", "userProfile.txt");
+
 	}
 
 }

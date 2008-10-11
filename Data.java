@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
@@ -8,8 +9,8 @@ public class Data {
 	static int cacheNum = 4;
     Server src;
     int seed = 0;
-    LinkedList<Server> fresh = new LinkedList<Server>();
-    LinkedList<Server> stale = new LinkedList<Server>();
+    ArrayList<Server> fresh = new ArrayList<Server>(cacheNum);
+    ArrayList<Server> stale = new ArrayList<Server>(cacheNum);
     Data(Server s) {
     	src = s;
     }
@@ -35,9 +36,15 @@ public class Data {
         return d;
     }
 
-	public Data() {
-
-	}
+    public void update(Server s) {
+    	if (s == src) {
+    		stale.addAll(fresh);
+    		fresh.clear();
+    	} else {
+    		stale.remove(s);
+    		fresh.add(s);
+    	}
+    }
 
 	/**
 	 * @param args

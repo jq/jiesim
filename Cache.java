@@ -5,7 +5,8 @@ import java.util.Set;
 
 public class Cache {
     int size;
-    int profit;
+    double profit;
+
     int cacheAccessTime = 10;
     List<Event> e;
     User[] u;
@@ -38,11 +39,11 @@ public class Cache {
     }
 
 	private void run(Access a) {
-
+		// try the combination
 	}
 
 	private void run(Update u) {
-
+		u.run();
 	}
 
 	public void result() {
