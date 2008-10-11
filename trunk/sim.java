@@ -24,7 +24,7 @@ public class sim {
 	public static void main(String[] args) {
     	String asPath = "/Volumes/src/jxu/sim/src/as";
     	int cacheSize = 50;
-    	String asFile = "/Volumes/src/jxu/sim/src/as/query100k-data688-10days-uniform.txt.as";
+    	String asFile = "/Volumes/src/jxu/sim/src/as/query20k-data688-10days-uniform.txt.as";
     	String uFile;
     	String oFile;
         for (int i = 0; i<args.length; ++i) {
@@ -32,10 +32,10 @@ public class sim {
         	if (s == "-c") {
         		++i;
         		cacheSize = Integer.parseInt(args[i]);
-        	} else if (s == "-u") {
+        	} else if (s.compareTo("-u") == 0) {
         		++i;
         		uFile = args[i];
-        	} else if (s == "-a") {
+        	} else if (s.compareTo("-a") == 0) {
         		++i;
         		asFile = args[i];
         	} else if (s == "-o") {
@@ -47,7 +47,8 @@ public class sim {
 		int serverSize = 10;
 		Server[] s = Server.getServers(serverSize);
 		// User
-
+		new UserProfileGenerator("userConfig.txt", "userProfile.txt");
+		
 		// Access
 		// Data can't be cloned, since data's location changed during running
 		Data[] d = Data.getDatas(s);
@@ -58,7 +59,9 @@ public class sim {
 		// read access from disk
     	ArrayList<Access> a = new ArrayList<Access>(20000);
 		Access.getAccess(d, a, asFile);
-
+		
+		User u = new User();
+		u.addUser(a, "userProfile.txt", "query.txt");
 
 		e.addAll(a);
 		Collections.sort(e);
