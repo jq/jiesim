@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.List;
 
 import webdb.Util;
@@ -18,6 +17,10 @@ public class Access extends Event {
     Data[] d;
     User u;
     int queryID;
+    int userID;
+    //QC spec
+    int maxQos, maxQod, minQos, minQod, relDeadline;
+    double fresh;
 
     static String pathPostfix = ".as";
 	//static String path = "../../src/update";

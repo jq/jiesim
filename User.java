@@ -30,9 +30,9 @@ public class User {
 
 	/*
 	 * @param: access, userprofile, 
-	 * @return: user number
+	 * @return: 
 	 */
-    public int addUser(Vector<Access> inputAccess, String inputUserProfile, String output){                                                                                                
+    public void addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){                                                                                                
         Random ran = new Random();                                                                                          
          
         usrid.clear();
@@ -41,12 +41,12 @@ public class User {
         int usrID, queryNum;
         int maxQos, minQos, relDeadline, maxQod, minQod;
         double fresh;
-        Vector<Profile> prof = new Vector();
+        ArrayList<Profile> prof = new ArrayList();
                 
         String line;                                                                                                                               
         StringTokenizer line_tokenizer; 
         
-        //read inputUserProfile and put into an array, get usrNum, build vector of id and list;
+        //read inputUserProfile and put into an array, get usrNum, build ArrayList of id and list;
         try
         {                                                                                                                                   
             FileReader fr_access = new FileReader (inputUserProfile);                                                                             
@@ -69,7 +69,7 @@ public class User {
 					//keep same index in usrid and prof
                 	if (usrid.indexOf(usrID)==-1){
                 	 usrid.add(new Integer(usrID));
-                	 prof.add(new profile(relDeadline, fresh, maxQos, maxQod, minQos, minQod));  
+                	 prof.add(new Profile(relDeadline, fresh, maxQos, maxQod, minQos, minQod));  
                 	}
                 	for (int i=0; i<queryNum; i++){
 						usrlist.add(new Integer(usrID));
@@ -91,38 +91,55 @@ public class User {
             usrNum = usrid.size();
             //System.out.println(usrlist.size());
             
-            int total = inputAccess.size();            
+            int total = inputAccess.size();   
+            Access a;
+            Profile p;
             for (int i=0; i<total; i++){
             	usrIndex = ran.nextInt(total-i);
             	usrID = (usrlist.get(usrIndex)).intValue();
             	usrPos = usrid.indexOf(usrID); //position in user id list, index of profile
             	
-            	inputAccess.elementAt(i).userID = usrID;
-            	Profile p = prof.elementAt(usrPos);
-            	inputAccess.elementAt(i).maxQos = p.maxQos;
-            	inputAccess.elementAt(i).maxQod = p.maxQod;
-            	inputAccess.elementAt(i).minQos = p.minQos;
-            	inputAccess.elementAt(i).minQod = p.minQod;
-            	inputAccess.elementAt(i).fresh = p.fresh;
-            	inputAccess.elementAt(i).relDeadline = p.relDeadline;
-            	usrlist.removeElementAt(usrIndex);
+            	p = prof.get(usrPos);
+            	a = inputAccess.get(i);
+            	a.userID = usrID;
+            	a.maxQos = p.maxQos;
+            	a.maxQod = p.maxQod;
+            	a.minQos = p.minQos;
+            	a.minQod = p.minQod;
+            	a.fresh = p.fresh;
+            	a.relDeadline = p.relDeadline;
+            	usrlist.remove(usrIndex);
             }
             
-/*
             FileOutputStream out = new FileOutputStream(output); ; 
             PrintStream out_p = new PrintStream( out );                                                            
 
             // dump output file
+            int len;
+            StringBuilder b = new StringBuilder(1024);
             for (int i=0; i<total; i++){
-            	arrTime = inputAccess.elementAt(i).arrTime;
-            	baseData = inputAccess.elementAt(i).baseData;
-            	exeTime = inputAccess.elementAt(i).exeTime;
-            	usrID = inputAccess.elementAt(i).usrID;
-            	usrIndex = usrid.indexOf(usrID);
-            	out_p.println (arrTime + "\t" + baseData + "\t" + exeTime + "\t" + usrID + "\t" + prof.elementAt(usrIndex) ); 
+            	a = inputAccess.get(i);
+            	//output format: queryID|data1,data2,...,datan|arrTime|userID|maxQos|relDeadline|maxQod|fresh
+            	b.append(a.queryID); b.append('|');
+            	len = a.d.length;
+            	b.append(a.d[0]);
+            	for (int j=1; j<len; j++) {
+            		b.append(',');
+            		b.append(a.d[j]);
+            	}
+            	b.append('|');
+            	b.append(a.timestamp); b.append('|');
+            	b.append(a.userID); b.append('|');
+            	b.append(a.maxQos); b.append('|');
+            	b.append(a.relDeadline); b.append('|');
+            	b.append(a.maxQod); b.append('|');
+            	b.append(a.fresh); b.append('\n');
+            	
+            	out_p.print (b.toString()); 
+            	b.setLength(0);
             }
             out_p.close();    
-*/
+
         }        
 
         catch (FileNotFoundException exception){                                                                                            
@@ -134,8 +151,13 @@ public class User {
             System.exit(0);                                                                                                  
         }                                                                                                                                   
         
-        return usrNum;
+        //return usrNum;
     }
+    
+    public static void main(String[] args) throws IOException{
+		//new UserProfileGenerator("userConfig.txt", "userProfile.txt");
+		//AddUser(a, "userProfile.txt", "query.txt");
+	}
 
 }
 
@@ -158,8 +180,8 @@ class Profile{
 		minQod = nqod;
 	}
 	public String toString(){
-		return relDeadline + "\t" + fresh + "\t" + maxQos + "\t" + maxQod + "\t" + minQos + "\t" + minQod;
-		//return maxQos + "\t" + relDeadline + "\t" + maxQod + "\t" + maxUnappliedupdates;
+		//return relDeadline + "\t" + fresh + "\t" + maxQos + "\t" + maxQod + "\t" + minQos + "\t" + minQod;
+		return maxQos + "\t" + relDeadline + "\t" + maxQod + "\t" + fresh;
 	}
 
 }                                                                                                                                     
