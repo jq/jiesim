@@ -17,7 +17,7 @@ public class User {
     int successQuery;
     int totalQuery;
 
-    double budget = 200;
+    static double budget = 200;
     double cost;
 
     //QC spec
@@ -164,7 +164,7 @@ public class User {
             	b.setLength(0);
             }
             out_p.close();
-            
+
 
         }
 

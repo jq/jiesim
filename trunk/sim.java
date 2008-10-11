@@ -31,6 +31,7 @@ public class sim {
     	String asFile = "/Volumes/src/jxu/sim/src/as/query20k-data688-10days-uniform.txt.as";
     	String uFile = "/Volumes/src/jxu/sim/src/userProfile.txt";
     	String oFile = "output";
+    	int t = Cache.FIFO_ALL;
         for (int i = 0; i<args.length; ++i) {
         	String s = args[i];
         	if (s.compareTo("-c") == 0) {
@@ -45,6 +46,9 @@ public class sim {
         	} else if (s.compareTo("-o") == 0) {
         		++i;
         		oFile = args[i];
+        	} else if (s.compareTo("-t") == 0) {
+        		++i;
+        		t = Integer.parseInt(args[i]);
         	}
         }
 		// Server
@@ -70,7 +74,7 @@ public class sim {
 		//User[] u = User.getUsers();
 		Writer output = new BufferedWriter(new FileWriter(new File(oFile)));
 
-        Cache c = new Cache();
+        Cache c = Cache.getCache(t);
         c.init(cacheSize, e, d, s, output);
         c.run();
 	}

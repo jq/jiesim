@@ -1,10 +1,13 @@
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 
 public class Cache {
-    int size;
+	static final int	FIFO_ALL = 0;
+    int cachesize;
     double profit;
 
     int cacheAccessTime = 10;
@@ -13,38 +16,82 @@ public class Cache {
     Data[] d;
     Server[] s;
     // cached data
-    Set<Data> c;
+    LinkedList<Data> fresh = new LinkedList<Data>();
+    LinkedList<Data> stale = new LinkedList<Data>();
     Writer o;
 
+    public static Cache getCache(int t) {
+    	switch (t) {
+    	case FIFO_ALL:
+    	    return new Cache();
+    	default:
+
+    	    return new Cache();
+    	}
+    }
+
 	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_, Writer output) {
-		size = size_;
+		cachesize = size_;
 		e = e_;
 		d = d_;
 		s = s_;
 		o = output;
 	}
 
+    public void invalidate(Data data) {
+    	if (fresh.remove(data)) {
+    		stale.addFirst(data);
+    	}
+    }
+
+    public boolean inCacheFresh(Data data) {
+    	return fresh.contains(data);
+    }
+
+    public boolean inCacheStale(Data data) {
+    	return stale.contains(data);
+    }
+
+    // a recent access to the data, and data is in cache
+    // we adjust its position in cache
+    public void adjustCache(Data data, boolean isStale) {
+    	// must be in the cache
+    	if (isStale) {
+    		if (stale.remove(data)) {
+    			stale.addLast(data);
+    		}
+    	} else {
+    		if (fresh.remove(data)) {
+    			fresh.addLast(data);
+    		}
+    	}
+    }
+
+    // a new data add to cache
+    public void addToCache(Data data, boolean isStale) {
+
+    	if (fresh.size() + stale.size() == cachesize) {
+        	if (stale.size() > 0) {
+        		stale.removeFirst();
+        	} else {
+        		fresh.removeFirst();
+        	}
+
+    	}
+		if (isStale) {
+			stale.addLast(data);
+		} else {
+		    fresh.addLast(data);
+		}
+    }
     public void run() {
 		int accessNum = e.size();
 		for (int i = 0; i<accessNum; ++i) {
 			Event ev = e.get(i);
-			if (ev instanceof Access) {
-                run((Access)ev);
-			} else {
-				run((Update) ev);
-
-			}
+			ev.run(this);
 		}
         result();
     }
-
-	private void run(Access a) {
-		// try the combination
-	}
-
-	private void run(Update u) {
-		u.run();
-	}
 
 	public void result() {
 
