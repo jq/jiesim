@@ -15,22 +15,21 @@ import webdb.Util;
 
 public class Access extends Event {
 	static int accessNum = 100;
-    Vector<Data> data;
-    int user;
+    Data[] d;
+    User u;
     int queryID;
-    
+
     static String pathPostfix = ".as";
 	//static String path = "../../src/update";
 	static String origPath = "../access/";
-    
-    Access (User u_, int q, Long time, ArrayList<Data> d_) {
-    	user = u_;
+
+    Access (int q, Long time, Data[] d_) {
     	queryID = q;
     	timestamp = time;
-    	data = d_;
+    	d = d_;
     }
-    
-    /* 
+
+    /*
      * @input: one access file in reorged format: queryID|data1,data2,...,datan|arrTime
      * @output: one access object
      */
@@ -38,23 +37,26 @@ public class Access extends Event {
     	try {
 	        java.io.BufferedReader reader = new  java.io.BufferedReader (
 	        new java.io.InputStreamReader (new java.io.FileInputStream (filename)));
-            
-	        ArrayList <Data> dataQ = new ArrayList<Data>();
+
 	        String line = reader.readLine ();
 	        while (line != null) {
                 java.util.StringTokenizer st = new java.util.StringTokenizer (line, "|");
-                int qid = Integer.parseInt(st.nextToken ());
-                String dStr = st.nextToken();
-                java.util.StringTokenizer dt = new java.util.StringTokenizer (dStr, ",");
-                while (dt.hasMoreTokens()) {
-		            int dID = Integer.parseInt(st.nextToken ());
-		            dataQ.add(d[dID]);
+                if (st.countTokens() == 3) {
+	                int qid = Integer.parseInt(st.nextToken ());
+	                String dStr = st.nextToken();
+	                java.util.StringTokenizer dt = new java.util.StringTokenizer (dStr, ",");
+	                int dataSize = dt.countTokens();
+	                Data[] data = new Data[dataSize];
+	                for (int i = 0; i < dataSize; ++i) {
+			            int dID = Integer.parseInt(dt.nextToken ());
+			            data[i] = d[dID];
+	                }
+	                Date t = Util.toDate (st.nextToken ());
+		            if (t != null) {
+				    	Access access = new Access(qid, t.getTime(), data);
+				    	a.add(access);
+		            }
                 }
-                Date t = Util.toDate (st.nextToken ());
-	            if (t != null) {
-			    	Access access = new Access(qid, t.getTime(), dataQ);
-			    	a.add(access);
-	            }
                 line = reader.readLine();
 	        }
     	}   catch (java.io.IOException ioe) {
@@ -62,7 +64,7 @@ public class Access extends Event {
 		}
 
     }
-    
+
     static void saveAccessToShorterFormat() throws IOException {
 		java.io.File start = new java.io.File (origPath);
         String list[]=start.list();
@@ -83,7 +85,7 @@ public class Access extends Event {
             }
         }
     }
-    
+
     /**
      * @input access file, e.g.:query20k-data688-10days-uniform.txt
      * sample:  userID|queryID|dataID|arrTime
@@ -98,35 +100,35 @@ public class Access extends Event {
     private static void saveAccess (String file, Writer output)    {
 		try {
             java.io.BufferedReader reader = new  java.io.BufferedReader (new java.io.InputStreamReader (new java.io.FileInputStream (file)));
-            
+
             String line = reader.readLine ();
             int beforeQid = -1;
             StringBuilder b = new StringBuilder(102400);
-            
+
             //process first line separately
             java.util.StringTokenizer st = new java.util.StringTokenizer (line, "|");
             if (st.countTokens() < 4) {
             	int i = 0;
             	i++;
-            } 
-            
+            }
+
             //pass userID
         	st.nextToken ();
-            
+
         	int currentQid = Util.toInteger(st.nextToken (), 0);
             if (beforeQid == -1) {
             	beforeQid = currentQid;
             }
         	b.append(String.valueOf(currentQid));
         	b.append('|');
-            
+
             //dataID
             String data = st.nextToken();
-            b.append(data);           
-            
+            b.append(data);
+
             //get arrTime, will append after appending all dataID in the same query
             String time = st.nextToken();
-            
+
             //start processing 2nd line to the end;
             line = reader.readLine ();
             while (line != null) {
@@ -135,18 +137,18 @@ public class Access extends Event {
                 	line = reader.readLine ();
                 	continue;
                 }
-                
+
                 //pass userID
                 st.nextToken ();
-	                
+
                 currentQid = Util.toInteger(st.nextToken (), 0);
                 data = st.nextToken();
-                
+
                 //same query
                 if (beforeQid == currentQid){
                 	b.append(',');
                 	b.append(String.valueOf(data));
-			    } else { //next query starts 
+			    } else { //next query starts
 			    	//finish writing previous one
 		    		b.append('|');
 		    		b.append(time);
@@ -164,7 +166,7 @@ public class Access extends Event {
             b.append('|');
     		b.append(time);
     		b.append('\n');
-            
+
             if (b.length() != 0) {
             	b.append('\n');
             	//String s = b.toString();
@@ -177,7 +179,7 @@ public class Access extends Event {
             ioe.printStackTrace ();
 		}
     }
-    
+
     public static Access[] getAccess() {
     	Access[] a = new Access[accessNum];
     	return a;

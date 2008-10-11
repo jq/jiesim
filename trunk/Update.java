@@ -57,6 +57,7 @@ public class Update extends Event{
 
     }
 
+
     static void saveUpdateToFastFormat() throws IOException {
 		java.io.File start = new java.io.File (origPath);
         String list[]=start.list();
