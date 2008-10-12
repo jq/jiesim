@@ -59,17 +59,17 @@ public class Data implements Comparable<Data>{
     	return slist;
     }
 
-    static Data[] getDatas(Server[] s) {
+    static Data[] getDatas(ArrayList<Server> s) {
         Data[] d = new Data[dataNum];
-        int serverSize = s.length;
+        int serverSize = s.size();
         for (int i = 0; i<dataNum; ++i) {
         	int srcNum = i%serverSize;
-        	d[i] = new Data(s[srcNum]);
+        	d[i] = new Data(s.get(srcNum));
 
         	// save cache
         	for (int j = 1; j<=cacheNum; ++j) {
         		int cacheNum = (srcNum + j) % serverSize;
-        		d[i].stale.add(s[cacheNum]);
+        		d[i].stale.add(s.get(cacheNum));
         	}
         }
         return d;

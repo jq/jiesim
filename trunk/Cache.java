@@ -16,7 +16,7 @@ public class Cache {
     List<Event> e;
     ArrayList<User> u;
     Data[] d;
-    Server[] s;
+    //Server[] s;
     // cached data
     LinkedList<Data> fresh = new LinkedList<Data>();
     LinkedList<Data> stale = new LinkedList<Data>();
@@ -32,12 +32,11 @@ public class Cache {
     	}
     }
 
-	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_,
+	public void init(int size_, List<Event> e_, Data[] d_,
 			Writer output, ArrayList<User> u_) {
 		cachesize = size_;
 		e = e_;
 		d = d_;
-		s = s_;
 		o = output;
 		u = u_;
 	}
