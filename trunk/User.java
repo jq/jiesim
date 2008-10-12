@@ -28,7 +28,7 @@ public class User {
 
 	User (int uid, int reld, double f, int qos, int qod, int nqos, int nqod){
 		userID = uid;
-		relDeadline = reld;
+		relDeadline = reld * 1000;
 		stale = f;
 		maxQos = qos;
 		maxQod = qod;
