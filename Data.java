@@ -22,6 +22,20 @@ public class Data implements Comparable<Data>{
     	return stale.get(seed % stale.size());
     }
 
+    public ArrayList<Solution> getSolutions() {
+    	ArrayList<Solution> slist = new ArrayList<Solution>(fresh.size() + stale.size()+1);
+    	slist.set(0, new Solution(1, src.accessTime, this, false));
+
+    	int i = 1;
+    	for (int j = 0; j<fresh.size(); ++j, ++i) {
+    		slist.set(i, new Solution(1, fresh.get(j).accessTime, this, false));
+    	}
+    	for (int j = 0; j<stale.size(); ++j, ++i) {
+    		slist.set(i, new Solution(1, stale.get(j).accessTime, this, true));
+    	}
+    	return slist;
+    }
+
     static Data[] getDatas(Server[] s) {
         Data[] d = new Data[dataNum];
         int serverSize = s.length;

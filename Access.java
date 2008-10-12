@@ -5,12 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import webdb.Util;
 
 public class Access extends Event {
 	static int accessNum = 100;
-    Data[] d;
+    Data[] data;
     User u;
     int queryID;
 
@@ -21,13 +22,42 @@ public class Access extends Event {
     Access (int q, Long time, Data[] d_) {
     	queryID = q;
     	timestamp = time;
-    	d = d_;
+    	data = d_;
     }
 
     public void run(Cache c) {
 		// try the combination
 		// if you get two data from one server, choose the longer time
+    	if (!u.hasMoney()) {
+    		return;
+    	}
+    	int time = 0;
+    	int frashData = 0;
+    	Solutions s = new Solutions();
+    	for (int i = 0; i<data.length; i++) {
+    		Data d = data[i];
+    		int dTime = 0;
+        	if (c.inCacheFresh(d)) {
+        		// no need to add to solution, since it is just one choice
+        		s.insertCacheFresh();
+        		c.adjustCache(d, true);
 
+        	} else if (c.inCacheStale(d)) {
+        		// just try src of data and cache
+        	    ArrayList<Solution> ss = new ArrayList<Solution>(2);
+        	    Solution staleCache = new Solution(1, Cache.cacheAccessTime, d, true);
+        	    Solution freshServer = new Solution(1, d.src.accessTime, d, false);
+        	    ss.set(0, staleCache);
+        	    ss.set(1, freshServer);
+        	    s.insert(ss);
+        	} else {
+        		// get it from servers
+        		ArrayList<Solution> ss = d.getSolutions();
+        		s.insert(ss);
+        	}
+    	}
+    	c.profit += s.pay(u, data.length, c);
+    	c.totalSuccess++;
     }
 
     /*
