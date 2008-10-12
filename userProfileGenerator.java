@@ -41,7 +41,7 @@ class UserProfileGenerator {
             line = brConfig.readLine();                                                                                                    
             
 //          skip comment lines and empty lines
-        	while (line.startsWith("#") || (line == ""))
+        	while (line.startsWith("#") || line.equals(""))
         	{
         		line = brConfig.readLine();
 //            	continue;

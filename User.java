@@ -71,7 +71,7 @@ public class User {
         int usrID, queryNum;
         int maxQos, minQos, relDeadline, maxQod, minQod;
         double stale;
-        ArrayList<User> users = new ArrayList();
+        ArrayList<User> users = new ArrayList<User>();
 
         String line;
         StringTokenizer line_tokenizer;
