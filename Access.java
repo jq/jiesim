@@ -37,6 +37,8 @@ public class Access extends Event {
         	if (c.inCacheFresh(d)) {
         		// no need to add to solution, since it is just one choice
         		s.insert(Cache.cacheAccessTime);
+        		// so the data is must be in cache
+        		// then no need to be set to cache in pay funtion, set it here
         		c.adjustCache(d, true);
 
         	} else if (c.inCacheStale(d)) {
@@ -55,6 +57,8 @@ public class Access extends Event {
         		} else {
 
         			s.insert(ss.get(0).getTime());
+            		// so the data is must be in cache since it is the best data from server, and fast
+            		// then no need to be set to cache in pay funtion, set it here
         			c.addToCache(d, false);
         		}
         	}

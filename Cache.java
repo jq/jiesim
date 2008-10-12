@@ -11,7 +11,7 @@ public class Cache {
     int cachesize;
     double profit;
 
-    static int cacheAccessTime = 100;
+    static int cacheAccessTime = 1000;
     int totalSuccess;
     List<Event> e;
     ArrayList<User> u;
