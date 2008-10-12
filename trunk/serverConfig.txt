@@ -1,0 +1,7 @@
+# field0: server class
+# field1: id range
+# field2: time	
+
+0	0-2		9-11	
+1	3-7		80-99
+2	8-10	120-150
