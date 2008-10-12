@@ -19,19 +19,22 @@ public class Data implements Comparable<Data>{
 
     public Server getRandomCacheServer() {
     	seed++;
-    	return stale.get(seed % stale.size());
+    	Server s = stale.get(seed % stale.size());
+    	if (s==null) {
+    		throw new RuntimeException();
+    	}
+    	return s;
     }
 
     public ArrayList<Solution> getSolutions() {
     	ArrayList<Solution> slist = new ArrayList<Solution>(fresh.size() + stale.size()+1);
-    	slist.set(0, new Solution(1, src.accessTime, this, false));
+    	slist.add(new Solution(1, src.accessTime, this, false));
 
-    	int i = 1;
-    	for (int j = 0; j<fresh.size(); ++j, ++i) {
-    		slist.set(i, new Solution(1, fresh.get(j).accessTime, this, false));
+    	for (int j = 0; j<fresh.size(); ++j) {
+    		slist.add(new Solution(1, fresh.get(j).accessTime, this, false));
     	}
-    	for (int j = 0; j<stale.size(); ++j, ++i) {
-    		slist.set(i, new Solution(1, stale.get(j).accessTime, this, true));
+    	for (int j = 0; j<stale.size(); ++j) {
+    		slist.add(new Solution(1, stale.get(j).accessTime, this, true));
     	}
     	return slist;
     }

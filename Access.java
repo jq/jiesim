@@ -47,8 +47,8 @@ public class Access extends Event {
         	    ArrayList<Solution> ss = new ArrayList<Solution>(2);
         	    Solution staleCache = new Solution(1, Cache.cacheAccessTime, d, true);
         	    Solution freshServer = new Solution(1, d.src.accessTime, d, false);
-        	    ss.set(0, staleCache);
-        	    ss.set(1, freshServer);
+        	    ss.add(staleCache);
+        	    ss.add(freshServer);
         	    s.insert(ss);
         	} else {
         		// get it from servers
