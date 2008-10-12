@@ -26,15 +26,35 @@ public class Data implements Comparable<Data>{
     	return s;
     }
 
-    public ArrayList<Solution> getSolutions() {
-    	ArrayList<Solution> slist = new ArrayList<Solution>(fresh.size() + stale.size()+1);
-    	slist.add(new Solution(1, src.accessTime, this, false));
-
-    	for (int j = 0; j<fresh.size(); ++j) {
-    		slist.add(new Solution(1, fresh.get(j).accessTime, this, false));
+    private static Server getFast(ArrayList<Server> sList) {
+    	Server s = null;
+    	for (int i = 0; i<sList.size(); ++i) {
+    		Server ns = sList.get(i);
+    		if (s == null || s.accessTime > ns.accessTime) {
+    			s = ns;
+    		}
     	}
-    	for (int j = 0; j<stale.size(); ++j) {
-    		slist.add(new Solution(1, stale.get(j).accessTime, this, true));
+    	return s;
+    }
+
+    public Solution getFreshSolution() {
+    	Server s = getFast(fresh);
+    	if (s==null || s.accessTime>src.accessTime){
+    		s = src;
+    	}
+    	return new Solution(1, s.accessTime, this, false);
+    }
+
+    public ArrayList<Solution> getSolutions() {
+    	ArrayList<Solution> slist = new ArrayList<Solution>(2);
+    	Solution so = getFreshSolution();
+    	slist.add(so);
+
+    	// add stale
+    	Server s = getFast(stale);
+    	if (s!=null && so.getTime() > s.accessTime) {
+        	slist.add(new Solution(1, src.accessTime, this, true));
+
     	}
     	return slist;
     }

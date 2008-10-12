@@ -6,6 +6,7 @@ import java.util.ListIterator;
 public class Solutions {
 	private LinkedList<Solution> list = new LinkedList<Solution>();
 
+	// used to insert a fresh cache copy only
 	public void insertCacheFresh() {
 		if (list.size() == 0) {
 			list.addFirst(new Solution(1, Cache.cacheAccessTime));
@@ -19,7 +20,18 @@ public class Solutions {
 		}
 	}
 
-	public void insert(Solution s) {
+	public void insert(int time) {
+		if (list.size() == 0) {
+			list.addFirst(new Solution(1, time));
+		} else {
+			 ListIterator<Solution> itr = list.listIterator();
+			 while (itr.hasNext()) {
+				 Solution s1 = itr.next();
+				 s1.AddFresh();
+				 s1.setTime(time);
+			 }
+		}
+	} void insert(Solution s) {
 		if (list.size() == 0) {
 			list.addFirst(s);
 		} else {
