@@ -52,8 +52,10 @@ public class sim {
         	}
         }
 		// Server
-		int serverSize = 10;
-		Server[] s = Server.getServers(serverSize);
+		int serverSize = 11;
+		//Server[] s = Server.getServers(serverSize);
+		String sconfig = "serverConfig.txt";
+		ArrayList<Server> s = Server.getServerFromConfig(sconfig);
 
 		// Access
 		// Data can't be cloned, since data's location changed during running
