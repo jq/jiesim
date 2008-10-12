@@ -14,7 +14,7 @@ public class Cache {
     static int cacheAccessTime = 100;
     int totalSuccess;
     List<Event> e;
-    User[] u;
+    ArrayList<User> u;
     Data[] d;
     Server[] s;
     // cached data
@@ -32,12 +32,14 @@ public class Cache {
     	}
     }
 
-	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_, Writer output) {
+	public void init(int size_, List<Event> e_, Data[] d_, Server[] s_,
+			Writer output, ArrayList<User> u_) {
 		cachesize = size_;
 		e = e_;
 		d = d_;
 		s = s_;
 		o = output;
+		u = u_;
 	}
 
     public void invalidate(Data data) {
@@ -96,8 +98,9 @@ public class Cache {
 
 	public void result() throws IOException {
         o.write("profit:" + Double.toString(profit) + "\n");
-        for (int i = 0; i<u.length; ++i) {
-        	o.write(u[i].getString());
+        for (int i = 0; i<u.size(); ++i) {
+        	o.write(u.get(i).getString());
         }
+        o.close();
 	}
 }

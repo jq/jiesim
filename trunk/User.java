@@ -23,8 +23,8 @@ public class User {
     //QC spec
     int maxQos, maxQod, minQos, minQod, relDeadline;
     double stale;
-    private double nslope_qos = maxQos/relDeadline;
-    private double nslope_qod = maxQod/stale;
+    private double nslope_qos;
+    private double nslope_qod;
 
 	User (int uid, int reld, double f, int qos, int qod, int nqos, int nqod){
 		userID = uid;
@@ -34,6 +34,8 @@ public class User {
 		maxQod = qod;
 		minQos = nqos;
 		minQod = nqod;
+		nslope_qos = maxQos/relDeadline;
+		nslope_qod = maxQod/stale;
 	}
 
 	String getString() {
@@ -87,7 +89,7 @@ public class User {
 	 * @param: access, userprofile,
 	 * @return:
 	 */
-    public static ArrayList<User> addUser(ArrayList<Access> inputAccess, String inputUserProfile, String output){
+    public static ArrayList<User> addUser(final ArrayList<Access> inputAccess, String inputUserProfile, String output){
 
     	Vector<Integer> usrid = new Vector<Integer>();
         Vector<Integer> usrlist = new Vector<Integer>();

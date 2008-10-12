@@ -1,12 +1,12 @@
 
 
-public class Event implements Comparable<Event>{
+public class Event implements Comparable{
     Long timestamp;
 
     public void run(Cache c) {}
 
-	public int compareTo(Event o) {
+	public int compareTo(Object o) {
 
-		return timestamp.compareTo(o.timestamp);
+		return timestamp.compareTo(((Event)o).timestamp);
 	}
 }

@@ -30,7 +30,7 @@ public class sim {
     	int cacheSize = 50;
     	String asFile = "/Volumes/src/jxu/sim/src/as/query20k-data688-10days-uniform.txt.as";
     	String uFile = "/Volumes/src/jxu/sim/src/userProfile.txt";
-    	String oFile = "output";
+    	String oFile = "/Volumes/src/jxu/sim/output";
     	int t = Cache.FIFO_ALL;
         for (int i = 0; i<args.length; ++i) {
         	String s = args[i];
@@ -63,19 +63,19 @@ public class sim {
     	Update.getUpdate(d, e);
 		// avoid the .svn folder
 		// read access from disk
-    	ArrayList<Access> a = new ArrayList<Access>(20000);
+    	ArrayList<Access> a = new ArrayList<Access>(40000);
 		Access.getAccess(d, a, asFile);
 
-		User.addUser(a, uFile, "query.txt");
 
 		e.addAll(a);
 		Collections.sort(e);
+		ArrayList<User> u = User.addUser(a, uFile, "query.txt");
 
 		//User[] u = User.getUsers();
 		Writer output = new BufferedWriter(new FileWriter(new File(oFile)));
 
         Cache c = Cache.getCache(t);
-        c.init(cacheSize, e, d, s, output);
+        c.init(cacheSize, e, d, s, output, u);
         c.run();
 	}
 

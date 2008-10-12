@@ -47,7 +47,7 @@ public class Update extends Event{
                 while (st.hasMoreTokens()) {
 		            Date t = Util.toDate (st.nextToken ());
 		            if (t != null) {
-				    	Update update = new Update(t.getTime(), data);
+				    	Update update = new Update(t.getTime(), data, data.src);
 				        Update cacheUpdate = new Update(t.getTime() + updateTime,
 				        		data, data.getRandomCacheServer());
 				    	u.add(update);
