@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +11,8 @@ public class Cache {
     int cachesize;
     double profit;
 
-    int cacheAccessTime = 10;
+    static int cacheAccessTime = 100;
+    int totalSuccess;
     List<Event> e;
     User[] u;
     Data[] d;
@@ -69,7 +71,6 @@ public class Cache {
 
     // a new data add to cache
     public void addToCache(Data data, boolean isStale) {
-
     	if (fresh.size() + stale.size() == cachesize) {
         	if (stale.size() > 0) {
         		stale.removeFirst();
@@ -84,7 +85,7 @@ public class Cache {
 		    fresh.addLast(data);
 		}
     }
-    public void run() {
+    public void run() throws IOException {
 		int accessNum = e.size();
 		for (int i = 0; i<accessNum; ++i) {
 			Event ev = e.get(i);
@@ -93,7 +94,10 @@ public class Cache {
         result();
     }
 
-	public void result() {
-
+	public void result() throws IOException {
+        o.write("profit:" + Double.toString(profit) + "\n");
+        for (int i = 0; i<u.length; ++i) {
+        	o.write(u[i].getString());
+        }
 	}
 }

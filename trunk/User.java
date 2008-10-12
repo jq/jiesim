@@ -36,7 +36,18 @@ public class User {
 		minQod = nqod;
 	}
 
-    String config = "userConfig.txt";
+	String getString() {
+		return "UserID:" + Integer.toString(userID) + " successQ:" + Integer.toString(successQuery) +
+		        " totalQuery:" + Integer.toString(totalQuery) +
+		        " rate:" + Float.toString((float)successQuery/(float)totalQuery) +
+		        " cost:" + Double.toString(cost) + "\n";
+
+	}
+
+    static String config = "userConfig.txt";
+    public boolean hasMoney() {
+    	return budget > cost;
+    }
 
     public double getQos_linearPositive(int time){
         if( time > relDeadline )
@@ -57,6 +68,21 @@ public class User {
     	return getQos_linearPositive(responseTime) + getQod_linearPositive(datastale);
     }
 
+    public double pay(int responseTime, float datastale) {
+    	double spend = pay_linearPositive(responseTime, datastale);
+    	successQuery++;
+    	if (!hasMoney()) {
+    		throw new RuntimeException("can't call pay if run out of money");
+    	}
+    	if (spend + cost >= budget) {
+    		double actualPay = budget - cost;
+    		cost = budget;
+    		return actualPay;
+    	} else {
+    		cost += spend;
+    		return spend;
+    	}
+    }
 	/*
 	 * @param: access, userprofile,
 	 * @return:
@@ -146,11 +172,11 @@ public class User {
             	a = inputAccess.get(i);
             	//output format: queryID|data1,data2,...,datan|arrTime|userID|maxQos|relDeadline|maxQod|stale
             	b.append(a.queryID); b.append('|');
-            	len = a.d.length;
-            	b.append(a.d[0]);
+            	len = a.data.length;
+            	b.append(a.data[0]);
             	for (int j=1; j<len; j++) {
             		b.append(',');
-            		b.append(a.d[j]);
+            		b.append(a.data[j]);
             	}
             	b.append('|');
             	b.append(a.timestamp); b.append('|');
