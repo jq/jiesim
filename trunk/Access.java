@@ -31,29 +31,32 @@ public class Access extends Event {
     	if (!u.hasMoney()) {
     		return;
     	}
-    	int time = 0;
-    	int frashData = 0;
     	Solutions s = new Solutions();
     	for (int i = 0; i<data.length; i++) {
     		Data d = data[i];
-    		int dTime = 0;
         	if (c.inCacheFresh(d)) {
         		// no need to add to solution, since it is just one choice
-        		s.insertCacheFresh();
+        		s.insert(Cache.cacheAccessTime);
         		c.adjustCache(d, true);
 
         	} else if (c.inCacheStale(d)) {
         		// just try src of data and cache
         	    ArrayList<Solution> ss = new ArrayList<Solution>(2);
         	    Solution staleCache = new Solution(1, Cache.cacheAccessTime, d, true);
-        	    Solution freshServer = new Solution(1, d.src.accessTime, d, false);
+        	    Solution freshServer = d.getFreshSolution();
         	    ss.add(staleCache);
         	    ss.add(freshServer);
         	    s.insert(ss);
         	} else {
         		// get it from servers
         		ArrayList<Solution> ss = d.getSolutions();
-        		s.insert(ss);
+        		if (ss.size() > 1) {
+        			s.insert(ss);
+        		} else {
+
+        			s.insert(ss.get(0).getTime());
+        			c.addToCache(d, false);
+        		}
         	}
     	}
     	c.profit += s.pay(u, data.length, c);
